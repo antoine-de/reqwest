@@ -21,7 +21,8 @@ use {Certificate, Identity};
 /// `Client`, use `Client::builder()`.
 ///
 /// The `Client` holds a connection pool internally, so it is advised that
-/// you create one and **reuse** it.
+/// you create one and **reuse** it. Cloning the `Client` also reuse the
+/// same connection pool.
 ///
 /// # Examples
 ///
@@ -494,6 +495,11 @@ impl Client {
     /// redirect loop was detected or redirect limit was exhausted.
     pub fn execute(&self, request: Request) -> ::Result<Response> {
         self.inner.execute_request(request)
+    }
+
+    /// Set the timeout on the Client
+    pub fn timeout(&mut self, timeout: impl Into<Option<Duration>>) {
+        self.inner.timeout = Timeout(timeout.into())
     }
 }
 
